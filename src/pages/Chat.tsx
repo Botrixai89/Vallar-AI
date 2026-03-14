@@ -12,6 +12,7 @@ import {
   fetchConversation,
   insertMessage,
 } from "@/lib/conversations";
+import { ensureUserExists } from "@/lib/ensureUser";
 import { groupSessionsByDate, type GroupedSessions } from "@/lib/sessionGroups";
 
 interface Message {
@@ -69,6 +70,11 @@ const Chat = () => {
     } finally {
       setSessionsLoading(false);
     }
+  }, [userEmail]);
+
+  // Ensure user exists in vallar_users on chat load (before first message)
+  useEffect(() => {
+    if (userEmail) ensureUserExists(userEmail);
   }, [userEmail]);
 
   useEffect(() => {
